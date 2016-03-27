@@ -18,9 +18,6 @@ do { \
     } \
 } while(0)
 
-static int i = 0;
-#define putsy() do { printf("%d (%d)\n", i, __LINE__); i++; } while (0)
-
 
 PyObject* jinja_init(const char* templdir)
 {
@@ -167,7 +164,6 @@ error:
 char* jinja_templates(PyObject* jinja)
 {
     static PyObject* iterator = NULL;
-    // static PyObject* next = NULL;
     static PyObject* curr = NULL;
     if (jinja) {
         return jinja_templatesFirst(jinja, &iterator, &curr);
