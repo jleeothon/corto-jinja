@@ -19,7 +19,7 @@ do { \
 } while(0)
 
 
-PyObject* jinja_init(const char* templdir)
+PyObject* jinja_initialize(const char* templdir)
 {
     Py_Initialize();
 
@@ -156,11 +156,6 @@ error:
 }
 
 
-/*
- * Call it the first time with a Jinja environment. And the next times with
- * NULL as parameter. Each time will return a template name.
- * This is similar to how strtok works.
- */
 char* jinja_templates(PyObject* jinja)
 {
     static PyObject* iterator = NULL;
@@ -173,9 +168,14 @@ char* jinja_templates(PyObject* jinja)
 }
 
 
-char* jinja_render(PyObject* template, PyObject* dict)
+char* jinja_render(PyObject* template, PyObject* context)
 {
-    PyObject* result = PyObject_CallMethod(template, "render", "O", dict);
+    PyObject* result = NULL;
+    if (context) {
+        result = PyObject_CallMethod(template, "render", "O", context);
+    } else {
+        result = PyObject_CallMethod(template, "render", "");
+    }
     ifn_goto(result, errorRender);
     
     char* _out = PyUnicode_AsUTF8(result);
@@ -193,6 +193,29 @@ errorDup:
 errorAsUTF8:
     Py_XDECREF(result);
 errorRender:
+    return NULL;
+}
+
+
+char* jinja_templaterender(PyObject* jinja, const char* templname, PyObject* context)
+{
+    PyObject* template = jinja_template(jinja, templname);
+    if (template == NULL) {
+        goto errorTemplate;
+    }
+
+    char* text = jinja_render(template, context);
+    if (text == NULL) {
+        goto errorRender;
+    }
+
+    Py_DECREF(template);
+
+    return text;
+
+errorRender:
+    Py_DECREF(template);
+errorTemplate:
     return NULL;
 }
 

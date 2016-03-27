@@ -14,7 +14,7 @@ corto_word _test_testTemplateEnv(
 /* $begin(test/testTemplateEnv) */
     char* templatesDir = corto_envparse("$PWD/test/%s", dir);
     test_assert(templatesDir != NULL);
-    PyObject* env = jinja_init(templatesDir);
+    PyObject* env = jinja_initialize(templatesDir);
     test_assert(env != NULL);
     corto_dealloc(templatesDir);
     return (corto_word)env;

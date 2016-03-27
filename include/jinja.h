@@ -10,7 +10,7 @@ extern "C" {
 
 #include <Python.h>
 
-PyObject* jinja_init(const char* templdir);
+PyObject* jinja_initialize(const char* templdir);
 
 void jinja_finalize(PyObject* jinja);
 
@@ -31,7 +31,13 @@ char* jinja_templates(PyObject* jinja);
  * Renders a template and writes the result to "out".
  * Returns a new string. Caller must deallocate it.
  */
-char* jinja_render(PyObject* template, PyObject* dict);
+char* jinja_render(PyObject* templ, PyObject* context);
+
+/*
+ * Shortcut call to both jinja_template and jinja_render.
+ * Caller must deallocate the returned string.
+ */
+char* jinja_templaterender(PyObject* jinja, const char* templname, PyObject* context);
 
 #ifdef __cplusplus
 }

@@ -27,7 +27,7 @@ corto_void _test_JinjaTestSuite_tc_getMissingTemplate(
 {
 /* $begin(test/JinjaTestSuite/tc_getMissingTemplate) */
     /* TODO This test prints to stderr */
-    this->jinja = (corto_word)jinja_init("templates");
+    this->jinja = (corto_word)jinja_initialize("templates");
     PyObject* jinja = (PyObject*)this->jinja;
     PyObject* template = jinja_template(jinja, "templateX.txt");
     test_assert(template == NULL);
@@ -38,7 +38,7 @@ corto_void _test_JinjaTestSuite_tc_getTemplate(
     test_JinjaTestSuite this)
 {
 /* $begin(test/JinjaTestSuite/tc_getTemplate) */
-    this->jinja = (corto_word)jinja_init("templates");
+    this->jinja = (corto_word)jinja_initialize("templates");
     PyObject* jinja = (PyObject*)this->jinja;
     PyObject* template = jinja_template(jinja, "template1.txt");
     test_assert(template != NULL);
@@ -50,7 +50,7 @@ corto_void _test_JinjaTestSuite_tc_init_finalize(
     test_JinjaTestSuite this)
 {
 /* $begin(test/JinjaTestSuite/tc_init_finalize) */
-    this->jinja = (corto_word)jinja_init("/usr/local");
+    this->jinja = (corto_word)jinja_initialize("/usr/local");
     test_assert(this->jinja);
 /* $end */
 }
