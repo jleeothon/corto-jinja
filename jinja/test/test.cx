@@ -1,0 +1,20 @@
+#package ::test
+
+word testTemplateEnv(string dir)
+
+test::Suite JinjaTestSuite::
+    jinja: word
+    void destruct() method
+
+    void tc_init_finalize()
+
+    void tc_listTemplates()
+    void tc_listTemplatesEmpty()
+    void tc_listTemplatesSingle()
+
+    void tc_getTemplate()
+    void tc_getMissingTemplate()
+
+    void tc_renderTemplateSimple()
+    void tc_renderTemplateVariable()
+    void tc_renderTemplateList()

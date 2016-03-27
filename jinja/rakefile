@@ -1,0 +1,12 @@
+
+PYTHON_VERSION = "3.4"
+
+CFLAGS = `python#{PYTHON_VERSION}-config --cflags`.split
+
+LFLAGS = `python#{PYTHON_VERSION}-config --ldflags`.split
+
+PACKAGE = 'jinja'
+
+NOCORTO = true
+
+require "#{ENV['CORTO_BUILD']}/package"
