@@ -21,7 +21,10 @@ do { \
 
 PyObject* jinja_initialize(const char* templdir)
 {
-    Py_Initialize();
+    if (!Py_IsInitialized()) {
+        fprintf(stderr, "Py_Initialize() was not called; remember to call Py_Initialize and Py_Finalize in your application");
+        goto errorNoPyInitialize;
+    }
 
     PyObject* loadersModule = PyImport_ImportModule("jinja2.loaders");
     ifn_goto(loadersModule, errorImportLoadersModule);
@@ -31,7 +34,7 @@ PyObject* jinja_initialize(const char* templdir)
 
     PyObject* fileSystemLoaderClass = PyObject_GetAttrString(loadersModule, "FileSystemLoader");
     ifn_goto(fileSystemLoaderClass, errorGetFileSystemLoaderClass);
-    
+
     PyObject* environmentClass = PyObject_GetAttrString(environmentModule, "Environment");
     ifn_goto(environmentClass, errorGetEnvironmentClass);
 
@@ -75,14 +78,16 @@ errorImportEnvironmentModule:
     Py_DECREF(loadersModule);
 errorImportLoadersModule:
     Py_Finalize();
+errorNoPyInitialize:
     return NULL;
 }
+
 
 void jinja_finalize(PyObject* jinja)
 {
     Py_XDECREF(jinja);
-    Py_Finalize();
 }
+
 
 PyObject* jinja_template(PyObject* jinja, const char* templname)
 {
@@ -177,10 +182,10 @@ char* jinja_render(PyObject* template, PyObject* context)
         result = PyObject_CallMethod(template, "render", "");
     }
     ifn_goto(result, errorRender);
-    
+
     char* _out = PyUnicode_AsUTF8(result);
     ifn_goto(_out, errorAsUTF8);
-    
+
     char* out = malloc(strlen(_out) + 1);
     ifn_goto(out, errorDup);
     strcpy(out, _out);
@@ -228,4 +233,3 @@ int cortomain(int argc, char *argv[]) {
     (void)argv;
     return 0;
 }
-
