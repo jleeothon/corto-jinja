@@ -6,18 +6,19 @@
  * when the file is regenerated.
  */
 
-#include "test.h"
+#include <test.h>
 
-corto_word _test_testTemplateEnv(
+PyObject* _test_getTestTemplateEnv(
     corto_string dir)
 {
-/* $begin(test/testTemplateEnv) */
-    char* templatesDir = corto_envparse("$PWD/test/%s", dir);
+/* $begin(test/getTestTemplateEnv) */
+    char* templatesDir = NULL;
+    corto_asprintf(&templatesDir, "%s/%s", TEST_ETC, dir);
     test_assert(templatesDir != NULL);
     PyObject* env = jinja_initialize(templatesDir);
     test_assert(env != NULL);
     corto_dealloc(templatesDir);
-    return (corto_word)env;
+    return env;
 /* $end */
 }
 

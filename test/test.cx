@@ -1,10 +1,13 @@
 #package ::test
 
-word testTemplateEnv(string dir)
+native/type PyObjectPtr: "PyObject*"
+PyObjectPtr getTestTemplateEnv(string dir)
 
 test::Suite JinjaTestSuite::
-    jinja: word
-    void destruct() method
+    jinja: PyObjectPtr, local
+
+    void setup() method
+    void teardown() method
 
     void tc_init_finalize()
 
