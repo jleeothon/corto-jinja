@@ -1,0 +1,55 @@
+language: c
+
+sudo: false
+
+os:
+  - linux
+
+dist: trusty
+
+addons:
+  apt:
+    packages:
+      - python3-pip
+      - python3.4
+      - python3.4-dev
+      - python3.4-venv
+    sources:
+      - deadsnakes
+
+before_install:
+  - python3 --version
+  - pip3 --version
+  - python3 -m venv $HOME/env
+  - ls -lRa $HOME/env
+  - source $HOME/env/bin/activate
+  - pip3 install --upgrade pip
+  - pip3 install Jinja2
+
+install:
+  - source $HOME/env/bin/activate
+  - cd ..
+  - mkdir cortoproject
+  - mv corto-jinja cortoproject/corto-jinja
+  - cd cortoproject
+  - git clone https://github.com/cortoproject/corto.git
+  - git clone https://github.com/cortoproject/c-binding.git
+  - git clone https://github.com/cortoproject/json.git
+  - git clone https://github.com/cortoproject/xml.git
+  - git clone https://github.com/cortoproject/corto-language.git
+  - git clone https://github.com/cortoproject/io.git
+  - git clone https://github.com/cortoproject/cortodoc.git
+  - git clone https://github.com/cortoproject/test.git
+  - |+
+    echo 'COMPONENTS = %w(corto c-binding json xml corto-language io cortodoc test corto-jinja)
+    require "#{ENV["CORTO_BUILD"]}/forward"' > rakefile
+  - for g in $(find . -name .git); do echo -e "$(basename $(dirname $g))\t$(git --git-dir $g rev-parse HEAD)"; done | column -t | sort
+  - source corto/configure
+  - rake
+
+script:
+  - pip3 freeze
+  - source $HOME/env/bin/activate
+  - source corto/configure
+  - CORTO_VERBOSITY=debug corto locate jinja
+  - cd corto-jinja && rake test && cd -
