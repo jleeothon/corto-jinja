@@ -48,8 +48,6 @@ install:
   - rake
 
 script:
-  - pip3 freeze
-  - source $HOME/env/bin/activate
   - source corto/configure
-  - CORTO_VERBOSITY=debug corto locate jinja
+  - source $HOME/env/bin/activate && CORTO_VERBOSITY=debug corto locate jinja
   - cd corto-jinja && rake test && cd -
