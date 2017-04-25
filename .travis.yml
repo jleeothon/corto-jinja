@@ -49,5 +49,5 @@ install:
 
 script:
   - source corto/configure
-  - source $HOME/env/bin/activate && CORTO_VERBOSITY=debug corto locate jinja
+  - source $HOME/env/bin/activate && CORTO_VERBOSITY=debug && env && corto locate jinja
   - cd corto-jinja && rake test && cd -
