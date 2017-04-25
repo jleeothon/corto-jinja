@@ -45,9 +45,10 @@ install:
     require "#{ENV["CORTO_BUILD"]}/forward"' > rakefile
   - for g in $(find . -name .git); do echo -e "$(basename $(dirname $g))\t$(git --git-dir $g rev-parse HEAD)"; done | column -t | sort
   - source corto/configure
+  - source $HOME/env/bin/activate
   - rake
 
 script:
   - source corto/configure
-  - source $HOME/env/bin/activate && CORTO_VERBOSITY=debug && env && corto locate jinja
+  - source $HOME/env/bin/activate && CORTO_VERBOSITY=debug && corto locate jinja
   - cd corto-jinja && rake test && cd -
